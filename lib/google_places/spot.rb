@@ -3,24 +3,24 @@ module GooglePlaces
     attr_accessor :lat, :lng, :name, :icon, :reference, :vicinity, :types, :id, :formatted_phone_number, :formatted_address, :address_components, :rating, :url
 
     def self.list(lat, lng, api_key, options = {})
-      radius = options.delete(:radius) || 200
-      sensor = options.delete(:sensor) || false
-      types  = options.delete(:types)
-      name  = options.delete(:name)
-      location = Location.new(lat, lng)
+      request_radius = options.delete(:radius) || 200
+      request_sensor = options.delete(:sensor) || false
+      request_types  = options.delete(:types)
+      request_name  = options.delete(:name)
+      request_location = Location.new(lat, lng)
 
       options = {
-        :location => location.format,
-        :radius => radius,
-        :sensor => sensor,
+        :location => request_location.format,
+        :radius => request_radius,
+        :sensor => request_sensor,
         :key => api_key,
-        :name => name
+        :name => request_name
       }
 
       # Accept Types as a string or array
-      if types
-        types = (types.is_a?(Array) ? types.join('|') : types)
-        options.merge!(:types => types)
+      if request_types
+        types = (types.is_a?(Array) ? request_types.join('|') : request_types)
+        options.merge!(:types => request_types)
       end
 
       response = Request.spots(options)
@@ -30,11 +30,11 @@ module GooglePlaces
     end
 
     def self.find(reference, api_key, options = {})
-      sensor = options.delete(:sensor) || false
+      request_sensor = options.delete(:sensor) || false
 
       response = Request.spot(
         :reference => reference,
-        :sensor => sensor,
+        :sensor => request_sensor,
         :key => api_key
       )
 
